@@ -124,7 +124,7 @@ public final class GlowMap {
             if (expect <= 0) continue;
             if (lightHere < 0) lightHere = blockLight(world, x, y, z);
             if (lightHere < expect) continue;   // между ХИС и блоком стена
-            float w = expect / (float) ls;
+            float w = Math.min(1f, expect / (float) Math.max(lightHere, 1));   // доля этого света: цвет держится по всей освещённой зоне
             int rgb = v >>> 4;
             r += w * (rgb >> 16 & 255);
             g += w * (rgb >> 8 & 255);

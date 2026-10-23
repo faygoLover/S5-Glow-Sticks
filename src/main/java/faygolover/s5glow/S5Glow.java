@@ -8,15 +8,10 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LightBlock;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.level.ChunkEvent;
-import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -47,9 +42,9 @@ public final class S5Glow {
     static {
         for (DyeColor c : DyeColor.values()) {
             RegistryObject<Block> b = BLOCKS.register("light_" + c.getName(),
-                    () -> new LightBlock(BlockBehaviour.Properties.copy(net.minecraft.world.level.block.Blocks.LIGHT)));
+                    () -> new ColoredLightBlock(BlockBehaviour.Properties.copy(net.minecraft.world.level.block.Blocks.LIGHT)));
             LIGHTS.put(c, b);
-            LIGHT_ITEMS.put(c, ITEMS.register("light_" + c.getName(), () -> new BlockItem(b.get(), new Item.Properties())));
+            LIGHT_ITEMS.put(c, ITEMS.register("light_" + c.getName(), () -> new BlockItem(b.get(), new Item.Properties().rarity(Rarity.EPIC))));
         }
     }
 
@@ -60,18 +55,6 @@ public final class S5Glow {
         bus.addListener((BuildCreativeModeTabContentsEvent e) -> {
             if (e.getTabKey().equals(RP_TAB)) LIGHT_ITEMS.values().forEach(i -> e.accept(i.get()));
         });
-        if (FMLEnvironment.dist != Dist.CLIENT) return;
-        bus.addListener((RegisterColorHandlersEvent.Item e) -> LIGHT_ITEMS.forEach((c, i) ->
-                e.register((stack, layer) -> 0xFF000000 | c.getTextColor(), i.get())));
-        GlowMap.enabled = true;
-        MinecraftForge.EVENT_BUS.addListener((ChunkEvent.Load e) -> {
-            if (e.getLevel().isClientSide() && e.getChunk() instanceof LevelChunk c) GlowMap.scan(c);
-        });
-        MinecraftForge.EVENT_BUS.addListener((ChunkEvent.Unload e) -> {
-            if (e.getLevel().isClientSide()) GlowMap.unload(e.getChunk().getPos());
-        });
-        MinecraftForge.EVENT_BUS.addListener((LevelEvent.Unload e) -> {
-            if (e.getLevel().isClientSide()) GlowMap.clear();
-        });
+        if (FMLEnvironment.dist == Dist.CLIENT) ClientHooks.init(bus, LIGHT_ITEMS);
     }
 }
