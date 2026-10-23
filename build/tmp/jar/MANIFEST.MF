@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Specification-Title: s5glow
+Specification-Vendor: faygoLover
+Specification-Version: 1
+Implementation-Title: s5glow
+Implementation-Version: 1.0.0-1.20.1-forge
+Implementation-Vendor: faygoLover
+Implementation-Timestamp: 2026-10-23T15:11:57+0300
+MixinConfigs: s5glow.mixins.json
+
