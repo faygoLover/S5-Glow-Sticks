@@ -1,0 +1,18 @@
+{
+ "block.s5glow.light_white": "Colored Light (white)",
+ "block.s5glow.light_orange": "Colored Light (orange)",
+ "block.s5glow.light_magenta": "Colored Light (magenta)",
+ "block.s5glow.light_light_blue": "Colored Light (light blue)",
+ "block.s5glow.light_yellow": "Colored Light (yellow)",
+ "block.s5glow.light_lime": "Colored Light (lime)",
+ "block.s5glow.light_pink": "Colored Light (pink)",
+ "block.s5glow.light_gray": "Colored Light (gray)",
+ "block.s5glow.light_light_gray": "Colored Light (light gray)",
+ "block.s5glow.light_cyan": "Colored Light (cyan)",
+ "block.s5glow.light_purple": "Colored Light (purple)",
+ "block.s5glow.light_blue": "Colored Light (blue)",
+ "block.s5glow.light_brown": "Colored Light (brown)",
+ "block.s5glow.light_green": "Colored Light (green)",
+ "block.s5glow.light_red": "Colored Light (red)",
+ "block.s5glow.light_black": "Colored Light (black)"
+}

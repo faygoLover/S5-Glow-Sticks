@@ -8,7 +8,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
-# Только клиент: на сервере не нужен.
+# Блоки цветного света регистрируются на обеих сторонах.
 displayTest="IGNORE_ALL_VERSION"
 
 [[dependencies.${mod_id}]]

@@ -12,7 +12,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.item.DyeColor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -39,15 +42,22 @@ public final class GlowMap {
         Map<Block, Integer> m = colors;
         if (m == null) {
             m = new IdentityHashMap<>();
-            for (GlowStickColor c : GlowStickColor.values()) {
-                for (String prefix : new String[]{"glow_stick_", "creative_glow_stick_"}) {
-                    Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("glow_sticks", prefix + c.getName()));
-                    if (b != null && b != Blocks.AIR) m.put(b, c.getRgb());
-                }
-            }
+            for (Map.Entry<DyeColor, RegistryObject<Block>> e : S5Glow.LIGHTS.entrySet())
+                m.put(e.getValue().get(), e.getKey().getTextColor());
+            if (ModList.get().isLoaded("glow_sticks")) glowSticks(m);
             colors = m;
         }
         return m;
+    }
+
+    /** Цвета ХИС: glow_sticks:glow_stick_<цвет> и creative_glow_stick_<цвет>. Отдельно — класс есть только с Glow Sticks. */
+    private static void glowSticks(Map<Block, Integer> m) {
+        for (GlowStickColor c : GlowStickColor.values()) {
+            for (String prefix : new String[]{"glow_stick_", "creative_glow_stick_"}) {
+                Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("glow_sticks", prefix + c.getName()));
+                if (b != null && b != Blocks.AIR) m.put(b, c.getRgb());
+            }
+        }
     }
 
     private static int packed(BlockState s) {
