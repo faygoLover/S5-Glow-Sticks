@@ -1,5 +1,6 @@
 package faygolover.s5glow;
 
+import faygolover.flrender.light.ColorTable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -14,13 +15,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LightBlock;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.ChunkEvent;
-import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Map;
@@ -43,16 +41,11 @@ final class ClientHooks {
                         return 1.0F;
                     }
                 }))));
-        GlowMap.enabled = true;
-        MinecraftForge.EVENT_BUS.addListener((ChunkEvent.Load e) -> {
-            if (e.getLevel().isClientSide() && e.getChunk() instanceof LevelChunk c) GlowMap.scan(c);
-        });
-        MinecraftForge.EVENT_BUS.addListener((ChunkEvent.Unload e) -> {
-            if (e.getLevel().isClientSide()) GlowMap.unload(e.getChunk().getPos());
-        });
-        MinecraftForge.EVENT_BUS.addListener((LevelEvent.Unload e) -> {
-            if (e.getLevel().isClientSide()) GlowMap.clear();
-        });
+        // Цвета для цветного света FL Render: блоки света и ХИС (лежащие, в руках, брошенные).
+        bus.addListener((FMLClientSetupEvent e) -> e.enqueueWork(() -> {
+            S5Glow.LIGHTS.forEach((c, b) -> ColorTable.block(b.get(), c.getTextColor(), 0, true));
+            if (ModList.get().isLoaded("glow_sticks")) GlowStickColors.register();
+        }));
     }
 
     static void marker(BlockState state, Level level, BlockPos pos) {

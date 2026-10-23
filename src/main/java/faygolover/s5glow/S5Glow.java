@@ -24,8 +24,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Цветной свет без замены освещения: невидимые блоки света 16 цветов (s5glow:light_<цвет>, как ванильный light)
- * и лежащие ХИС (Glow Sticks) подкрашивают блоки вокруг своим цветом (клиент, см. GlowMap).
+ * Цветной свет: невидимые блоки света 16 цветов (s5glow:colored_light_<цвет>, как ванильный light) и ХИС (Glow Sticks:
+ * лежащие, в руках, брошенные) светят своим цветом — сам свет рисует FL Render, здесь только цвета (клиент, ClientHooks).
  */
 @Mod(S5Glow.MODID)
 public final class S5Glow {
@@ -41,10 +41,10 @@ public final class S5Glow {
 
     static {
         for (DyeColor c : DyeColor.values()) {
-            RegistryObject<Block> b = BLOCKS.register("light_" + c.getName(),
+            RegistryObject<Block> b = BLOCKS.register("colored_light_" + c.getName(),
                     () -> new ColoredLightBlock(BlockBehaviour.Properties.copy(net.minecraft.world.level.block.Blocks.LIGHT)));
             LIGHTS.put(c, b);
-            LIGHT_ITEMS.put(c, ITEMS.register("light_" + c.getName(), () -> new BlockItem(b.get(), new Item.Properties().rarity(Rarity.EPIC))));
+            LIGHT_ITEMS.put(c, ITEMS.register("colored_light_" + c.getName(), () -> new BlockItem(b.get(), new Item.Properties().rarity(Rarity.EPIC))));
         }
     }
 

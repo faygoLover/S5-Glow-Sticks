@@ -1,21 +1,9 @@
-buildscript {
-    repositories {
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
-}
-
 plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
-
-apply plugin: 'org.spongepowered.mixin'
 
 version = mod_version
 group = mod_group_id
@@ -59,16 +47,15 @@ minecraft {
     }
 }
 
-// Цвет ХИС в вершинах чанков Embeddium.
-mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
-    config "${mod_id}.mixins.json"
+repositories {
+    // FL Render — цветной свет (у игроков обязателен); jar в libs/.
+    flatDir { dir 'libs' }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    compileOnly files('libs/embeddium-0.3.31+mc1.20.1.jar', 'libs/glow_sticks-forge-1.20.1-7.5.1.jar')
+    compileOnly files('libs/glow_sticks-forge-1.20.1-7.5.1.jar')
+    implementation fg.deobf("blank:flrender:${flrender_version}")
 }
 
 tasks.named('processResources', ProcessResources).configure {
